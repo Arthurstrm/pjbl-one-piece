@@ -14,7 +14,7 @@ abstract class existencia{
     public int vida = 100;
     private int stamina;
     private int forca;
-    private int defesa;
+    private float defesa;
     private String raca;
 
     public existencia(String nome, int nivel, int experiencia, int vida, int stamina, int forca, int defesa, String raca){
@@ -29,6 +29,13 @@ abstract class existencia{
 
     }
 
+    public float getDefesa(){
+        return defesa;
+    }
+
+    public String getNome(){
+        return this.nome;
+    }
 }
 
 
@@ -38,11 +45,17 @@ class golpe{
     private String nome;
     public int dano;
 
+    public String getNome(){
+        return this.nome;
+    }
+
     public golpe(String nome, int dano){
         this.nome = nome;
         this.dano = dano;
     }
 }
+
+
 
 class personagem extends existencia {
 
@@ -61,12 +74,33 @@ class personagem extends existencia {
 
     public void defender() {
 
-        System.out.println("defendeu");
-    }
 
+    }
 }
 
+//class do personagem luffy
+class Luffy extends personagem{
 
+    public Luffy(String nome, int nivel, int experiencia, int vida, int stamina, int forca, int defesa, String raca){
+        super(nome, nivel, experiencia, vida, stamina, forca, defesa, raca);
+    }
+
+    //Confia😎
+    // vou add mais alguns ataques
+    // tbm vou fazer o metodo de defesa
+    // consumir energia tbm
+    public void gomo_pistol(inimigo i){
+        System.out.println("luffy usou o gomo-gomo no pistol, causando 20 de dano");
+        i.vida -= 20;
+    }
+
+    public void gomoGatiling(inimigo i){
+        System.out.println("luffy usou gomo-gomo no GATILING, causando 40 de dano");
+        i.vida -= 40;
+    }
+}
+
+//classe inimigo
 abstract class inimigo extends existencia{
     public inimigo (String nome, int nivel, int experiencia, int vida, int stamina, int forca, int defesa, String raca){
         super(nome, nivel, experiencia, vida, stamina, forca, defesa, raca);
@@ -74,6 +108,9 @@ abstract class inimigo extends existencia{
     }
     public abstract void atacar(personagem p);
 }
+
+
+//classe pirata
 class pirata extends inimigo{
 
     Random aleatorio = new Random();
@@ -85,6 +122,10 @@ class pirata extends inimigo{
         this.golpes = new ArrayList<>();
     }
 
+    public void mostravida(){
+        System.out.println(this.vida);
+    }
+
     public void addGolpe(golpe g){
         this.golpes.add(g);
     }
@@ -92,19 +133,16 @@ class pirata extends inimigo{
     @Override
     public void atacar(personagem p){
         int teste = aleatorio.nextInt(golpes.size());
-        golpe sla = golpes.get(teste);
-        p.vida -= sla.dano;
+        golpe golpe = golpes.get(teste);
+        float danorecebido= golpe.dano - (golpe.dano * (p.getDefesa() /10));
+        p.vida -= danorecebido;
+
+        System.out.printf("%s usou o golpe %s, causando %.0f de dano\n", this.getNome(), golpe.getNome(), danorecebido );
     }
 }
 
 
-
-
-
-
-
-
-
+//classe inimigo marinheiro
 class Marinheiro extends inimigo{
     Random aleatorio = new Random();
     private ArrayList<golpe> golpes;
@@ -114,7 +152,6 @@ class Marinheiro extends inimigo{
     }
 
     public void addGolpe(golpe g){
-
         this.golpes.add(g);
     }
 
@@ -122,25 +159,30 @@ class Marinheiro extends inimigo{
     public void atacar(personagem p){
         int golpe  = aleatorio.nextInt(golpes.size());
         golpe aleatorio = golpes.get(golpe);
-        System.out.println(aleatorio + "golpeou");
+        System.out.printf("%s usou o golde %s, causando %d de dano\n", getNome(), aleatorio.getNome(), aleatorio.dano);
     }
 }
 
 public class onepiece {
     public static void main(String[] args) {
 
-        personagem ps1 = new personagem("luffy",1,0,100,100,10,1,"humano");
+        // ainda tem que pensar como fazer o sistema de ganhar stamina
+
+        Luffy luffy = new Luffy("luffy",1,0,100,100,10,8,"humano");
         pirata p1 = new pirata("negra barba",1,10,100,100,10,1,"humano");
-        p1.addGolpe(new golpe("batata",10));
 
-        ps1.mostrarvida();
-        p1.atacar(ps1);
-        ps1.mostrarvida();
+        p1.addGolpe(new golpe("escuiridão",10));
+        p1.addGolpe(new golpe("corte negro",20));
 
+        luffy.mostrarvida();
+        p1.atacar(luffy);
+        luffy.mostrarvida();
+        System.out.println(" ");
+        p1.mostravida();
+        luffy.gomo_pistol(p1);
+        p1.mostravida();
 
 
 
     }
 }
-
-// buenos dias (:()} 0u0
