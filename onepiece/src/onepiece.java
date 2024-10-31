@@ -41,6 +41,16 @@ abstract class existencia{
         }
     }
 
+    public boolean reduzirStamina(int s){
+        if (stamina <= 0){
+            System.out.println("stamina insufisciente");
+            return false;
+        } else{
+        stamina -= s;
+        return  true;
+        }
+    }
+
     public int getStamina(){   return  this.stamina;}
 
     public float getDefesa(){
@@ -99,14 +109,18 @@ class Luffy extends personagem{
         super(nome, nivel, experiencia, vida, stamina, forca, defesa, raca);
     }
 
-
+    public void mostrarStamina(){
+        System.out.println(stamina);
+    }
     //Confia😎
     // vou add mais alguns ataques
     // tbm vou fazer o metodo de defesa
     // consumir energia tbm      ainda não sei como fazer isso
     public void gomo_pistol(inimigo i){
-        System.out.println("luffy usou o gomo-gomo no pistol, causando 20 de dano");
-        i.vida -= 20;
+        if (reduzirStamina(10) == true){
+            System.out.println("luffy usou o gomo-gomo no pistol, causando 20 de dano");
+            i.vida -= 20;
+        }
     }
 
     public void gomoGatiling(inimigo i){
@@ -215,16 +229,9 @@ public class onepiece {
         p1.addGolpe(new golpe("escuiridão",10));
         p1.addGolpe(new golpe("corte negro",20));
 
-        luffy.mostrarvida();
-        p1.atacar(luffy);
-        luffy.mostrarvida();
-        System.out.println(" ");
-        p1.mostravida();
+        luffy.mostrarStamina();
         luffy.gomo_pistol(p1);
-        p1.mostravida();
-
-
-
-
+        luffy.mostrarStamina();
+        
     }
 }
