@@ -100,6 +100,23 @@ class Luffy extends personagem{
     }
 }
 
+class Zoro extends personagem{
+    private ArrayList<golpe> golpesZoro;
+
+    public Zoro(String nome, int nivel, int experiencia, int vida, int stamina, int forca, int defesa, String raca){
+        super(nome, nivel, experiencia, vida, stamina, forca, defesa, raca);
+    }
+
+    public void Asura(inimigo i){
+        System.out.println("Golpe Ashura usado, causando 30 de dano");
+        i.vida -= 30;
+    }
+    public void Ul_TorGari(inimigo i){
+        System.out.println("Golpe Ul-Tora Gari usado, causando 40 de dano");
+        i.vida -= 40;
+    }
+}
+
 //classe inimigo
 abstract class inimigo extends existencia{
     public inimigo (String nome, int nivel, int experiencia, int vida, int stamina, int forca, int defesa, String raca){
@@ -167,7 +184,7 @@ public class onepiece {
     public static void main(String[] args) {
 
         // ainda tem que pensar como fazer o sistema de ganhar stamina
-
+        Zoro zoro = new Zoro("Zoro",1,0,100,100,10,50,"humano");
         Luffy luffy = new Luffy("luffy",1,0,100,100,10,8,"humano");
         pirata p1 = new pirata("negra barba",1,10,100,100,10,1,"humano");
 
