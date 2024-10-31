@@ -26,7 +26,7 @@ abstract class existencia{
         this.forca = forca;
         this.defesa = defesa;
         this.raca = raca;
-        
+
         switch (raca) {
             case "humano":
                 vida = 100;
@@ -46,8 +46,8 @@ abstract class existencia{
             System.out.println("stamina insufisciente");
             return false;
         } else{
-        stamina -= s;
-        return  true;
+            stamina -= s;
+            return  true;
         }
     }
 
@@ -68,14 +68,20 @@ class golpe{
 
     private String nome;
     public int dano;
+    public int energia;
 
     public String getNome(){
         return this.nome;
     }
 
-    public golpe(String nome, int dano){
+    public int getEnergia(){
+        return energia;
+    }
+
+    public golpe(String nome, int dano, int energia){
         this.nome = nome;
         this.dano = dano;
+        this.energia = energia;
     }
 }
 
@@ -185,10 +191,26 @@ class pirata extends inimigo{
     public void atacar(personagem p){
         int teste = aleatorio.nextInt(golpes.size());
         golpe golpe = golpes.get(teste);
-        float danorecebido= golpe.dano - (golpe.dano * (p.getDefesa() /10));
-        p.vida -= danorecebido;
+
+        //essa variavel pega o dano recebido junto com a defesa
+        float danorecebido = golpe.dano - (golpe.dano * (p.getDefesa() /10));
+
+        // estou fazendo testes para gastar stamina
+        if (golpe.energia <= this.stamina){
+            p.vida -= danorecebido;
+            System.out.println(golpe.getEnergia());
+            this.stamina -= golpe.getEnergia();
+        }else {
+            this.atacar(p);
+        }
+
 
         System.out.printf("%s usou o golpe %s, causando %.0f de dano\n", this.getNome(), golpe.getNome(), danorecebido );
+    }
+
+    //só para ver se a stamina ta funcionando
+    public void mostrarStamina(){
+        System.out.println(stamina);
     }
 }
 
@@ -224,14 +246,15 @@ public class onepiece {
         // ainda tem que pensar como fazer o sistema de ganhar stamina
         Zoro zoro = new Zoro("Zoro",1,0,100,100,10,50,"humano");
         Luffy luffy = new Luffy("luffy",1,0,100,100,10,8,"humano");
-        pirata p1 = new pirata("negra barba",1,10,100,100,10,1,"humano");
+        pirata barbanegra = new pirata("negra barba",1,10,100,100,10,1,"humano");
 
-        p1.addGolpe(new golpe("escuiridão",10));
-        p1.addGolpe(new golpe("corte negro",20));
+        barbanegra.addGolpe(new golpe("escuiridão",10,10));
+        barbanegra.addGolpe(new golpe("corte negro",20,20));
+        barbanegra.addGolpe(new golpe("soco negro",10,10));
 
-        luffy.mostrarStamina();
-        luffy.gomo_pistol(p1);
-        luffy.mostrarStamina();
-        
+        barbanegra.mostrarStamina();
+        barbanegra.atacar(luffy);
+        barbanegra.mostrarStamina();
+
     }
 }
