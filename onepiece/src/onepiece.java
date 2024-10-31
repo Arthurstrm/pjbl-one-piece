@@ -1,7 +1,3 @@
-/*
-5 classes, 1 abstrata, metodo e classe, cada class 10 atributos e 10 metodos
- */
-
 import java.util.ArrayList;
 import java.util.Random;
 import  javax.swing.*;
@@ -13,9 +9,10 @@ abstract class existencia{
     private int experiencia;
     public int vida = 100;
     public int stamina;
-    private int forca;
+    private float forca;
     private float defesa;
     private String raca;
+    private boolean haki = false;
 
     public existencia(String nome, int nivel, int experiencia, int vida, int stamina, int forca, int defesa, String raca){
         this.nome = nome;
@@ -39,6 +36,10 @@ abstract class existencia{
             case "Cyborg":
                 vida = 110;
         }
+    }
+
+    public float GetForca(){
+        return  forca;
     }
 
     public boolean reduzirStamina(int s){
@@ -115,19 +116,26 @@ class Luffy extends personagem{
         super(nome, nivel, experiencia, vida, stamina, forca, defesa, raca);
     }
 
+    //metodo para  causas dano e almenta ele com base na força do atacante
+    public float causardano(int dano){
+        return dano + (dano * (GetForca() / 10));
+    }
+
     public void mostrarStamina(){
         System.out.println(stamina);
     }
-    //Confia😎
-    // vou add mais alguns ataques
-    // tbm vou fazer o metodo de defesa
-    // consumir energia tbm      ainda não sei como fazer isso
+
+    // metodo do golpe gomo-gomo no pistol
     public void gomo_pistol(inimigo i){
         if (reduzirStamina(10) == true){
-            System.out.println("luffy usou o gomo-gomo no pistol, causando 20 de dano");
-            i.vida -= 20;
+            System.out.printf("luffy usou o gomo-gomo no pistol, causando %.0f de dano", causardano(20));
+            i.vida -= causardano(20);
         }
     }
+
+    // AINDA VOU FAZER, confia 😎
+    // SISTEMA DE HAKI, sistema onde vai gastar stamina a mais por galpe, além de ganhar dano e defesa
+    // ainde tem que ser implementado
 
     public void gomoGatiling(inimigo i){
         System.out.println("luffy usou gomo-gomo no GATILING, causando 40 de dano");
@@ -196,16 +204,14 @@ class pirata extends inimigo{
         float danorecebido = golpe.dano - (golpe.dano * (p.getDefesa() /10));
 
         // estou fazendo testes para gastar stamina
-        if (golpe.energia <= this.stamina){
+        if (this.stamina >= golpe.energia){
             p.vida -= danorecebido;
-            System.out.println(golpe.getEnergia());
             this.stamina -= golpe.getEnergia();
+            System.out.printf("%s usou o golpe %s, causando %.0f de dano\n", this.getNome(), golpe.getNome(), danorecebido );
         }else {
-            this.atacar(p);
+            System.out.printf("%s socou %s, causando 5 de dano\n", this.getNome(), p.getNome());
+            p.vida -= 5;
         }
-
-
-        System.out.printf("%s usou o golpe %s, causando %.0f de dano\n", this.getNome(), golpe.getNome(), danorecebido );
     }
 
     //só para ver se a stamina ta funcionando
@@ -248,13 +254,10 @@ public class onepiece {
         Luffy luffy = new Luffy("luffy",1,0,100,100,10,8,"humano");
         pirata barbanegra = new pirata("negra barba",1,10,100,100,10,1,"humano");
 
-        barbanegra.addGolpe(new golpe("escuiridão",10,10));
-        barbanegra.addGolpe(new golpe("corte negro",20,20));
-        barbanegra.addGolpe(new golpe("soco negro",10,10));
+        barbanegra.addGolpe(new golpe("escuiridão",50,60));
+        barbanegra.addGolpe(new golpe("corte negro",40,35));
+        barbanegra.addGolpe(new golpe("soco negro",20,10));
 
-        barbanegra.mostrarStamina();
-        barbanegra.atacar(luffy);
-        barbanegra.mostrarStamina();
-
+        luffy.gomo_pistol(barbanegra);
     }
 }
