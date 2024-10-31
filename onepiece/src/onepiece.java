@@ -12,7 +12,7 @@ abstract class existencia{
     private int nivel;
     private int experiencia;
     public int vida = 100;
-    private int stamina;
+    public int stamina;
     private int forca;
     private float defesa;
     private String raca;
@@ -40,6 +40,8 @@ abstract class existencia{
                 vida = 110;
         }
     }
+
+    public int getStamina(){   return  this.stamina;}
 
     public float getDefesa(){
         return defesa;
@@ -97,10 +99,11 @@ class Luffy extends personagem{
         super(nome, nivel, experiencia, vida, stamina, forca, defesa, raca);
     }
 
+
     //Confia😎
     // vou add mais alguns ataques
     // tbm vou fazer o metodo de defesa
-    // consumir energia tbm
+    // consumir energia tbm      ainda não sei como fazer isso
     public void gomo_pistol(inimigo i){
         System.out.println("luffy usou o gomo-gomo no pistol, causando 20 de dano");
         i.vida -= 20;
@@ -109,6 +112,11 @@ class Luffy extends personagem{
     public void gomoGatiling(inimigo i){
         System.out.println("luffy usou gomo-gomo no GATILING, causando 40 de dano");
         i.vida -= 40;
+    }
+
+    public void gomoRifle(inimigo i){
+        System.out.println("Luffy usou gomo-gomo no rifle causando, 70 de dano");
+        i.vida -= 70;
     }
 }
 
