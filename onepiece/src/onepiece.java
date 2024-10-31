@@ -81,7 +81,7 @@ class personagem extends existencia {
     }
 
     public void mostrarvida(){
-        System.out.println(this.vida);
+        System.out.printf("Vida atual: %d\n", this.vida);
     }
 
     public void defender() {
@@ -152,7 +152,7 @@ class pirata extends inimigo{
     }
 
     public void mostravida(){
-        System.out.println(this.vida);
+        System.out.printf("Vida atual do inimigo: %d\n", this.vida);
     }
 
     public void addGolpe(golpe g){
@@ -178,6 +178,10 @@ class Marinheiro extends inimigo{
     public Marinheiro (String nome, int nivel, int experiencia, int vida, int stamina, int forca, int defesa, String raca){
         super(nome, nivel, experiencia, vida, stamina, forca, defesa, raca);
         this.golpes = new ArrayList<>();
+    }
+
+    public void mostravida(personagem p){
+        System.out.printf("Vida atual do inimigo: %d\n", this.vida);
     }
 
     public void addGolpe(golpe g){
@@ -210,6 +214,7 @@ public class onepiece {
         p1.mostravida();
         luffy.gomo_pistol(p1);
         p1.mostravida();
+
 
 
 
