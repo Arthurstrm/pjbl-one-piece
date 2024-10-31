@@ -26,7 +26,19 @@ abstract class existencia{
         this.forca = forca;
         this.defesa = defesa;
         this.raca = raca;
-
+        
+        switch (raca) {
+            case "humano":
+                vida = 100;
+            case "Gigante":
+                vida = 150;
+            case "HomemPeixe":
+                vida = 130;
+            case "Mink":
+                vida = 120;
+            case "Cyborg":
+                vida = 110;
+        }
     }
 
     public float getDefesa(){
