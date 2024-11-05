@@ -26,15 +26,35 @@ abstract class existencia{
 
         switch (raca) {
             case "humano":
-                vida = 100;
+                this.vida +=15;
+                this.forca += 1;
+                this.defesa += 1;
+                this.stamina += 15;
+
             case "Gigante":
-                vida = 150;
+                this.vida += 100;
+                this.forca += 3;
+                this.stamina -= 60;
+                this.defesa += 2;
+
             case "HomemPeixe":
-                vida = 130;
+                this.vida += 120;
+                this.forca += 2;
+                this.defesa += 2;
+                this.stamina += 16;
+
             case "Mink":
-                vida = 120;
+                this.vida += 15;
+                this.forca += 1 ;
+                this.defesa += 1;
+                this.stamina += 100;
+
             case "Cyborg":
-                vida = 110;
+                this.vida += 75;
+                this.forca += 3;
+                this.defesa += 5;
+                this.stamina += 10;
+
         }
     }
 
