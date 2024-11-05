@@ -27,7 +27,6 @@ abstract class existencia{
         switch (raca) {
             case "humano":
                 this.vida +=15;
-                this.forca += 1;
                 this.defesa += 1;
                 this.stamina += 15;
 
@@ -148,7 +147,7 @@ class Luffy extends personagem{
     // metodo do golpe gomo-gomo no pistol
     public void gomo_pistol(inimigo i){
         if (reduzirStamina(10) == true){
-            System.out.printf("luffy usou o gomo-gomo no pistol, causando %.0f de dano", causardano(20));
+            System.out.printf("luffy usou o gomo-gomo no pistol, causando %.0f de dano\n", causardano(20));
             i.vida -= causardano(20);
         }
     }
@@ -158,12 +157,12 @@ class Luffy extends personagem{
     // ainde tem que ser implementado
 
     public void gomoGatiling(inimigo i){
-        System.out.println("luffy usou gomo-gomo no GATILING, causando 40 de dano");
+        System.out.println("luffy usou gomo-gomo no GATILING, causando 40 de dano\n");
         i.vida -= 40;
     }
 
     public void gomoRifle(inimigo i){
-        System.out.println("Luffy usou gomo-gomo no rifle causando, 70 de dano");
+        System.out.println("Luffy usou gomo-gomo no rifle causando, 70 de dano\n");
         i.vida -= 70;
     }
 }
@@ -221,12 +220,14 @@ class pirata extends inimigo{
         golpe golpe = golpes.get(teste);
 
         //essa variavel pega o dano recebido junto com a defesa
+        //❌❌❌ arrumar o dano recebido, ta dando negativo
         float danorecebido = golpe.dano - (golpe.dano * (p.getDefesa() /10));
 
         // estou fazendo testes para gastar stamina
         if (this.stamina >= golpe.energia){
             p.vida -= danorecebido;
             this.stamina -= golpe.getEnergia();
+            System.out.println(danorecebido);
             System.out.printf("%s usou o golpe %s, causando %.0f de dano\n", this.getNome(), golpe.getNome(), danorecebido );
         }else {
             System.out.printf("%s socou %s, causando 5 de dano\n", this.getNome(), p.getNome());
@@ -271,13 +272,15 @@ public class onepiece {
 
         // ainda tem que pensar como fazer o sistema de ganhar stamina
         Zoro zoro = new Zoro("Zoro",1,0,100,100,10,50,"humano");
-        Luffy luffy = new Luffy("luffy",1,0,100,100,10,8,"humano");
+        Luffy luffy = new Luffy("luffy",1,0,100,100,10,1,"humano");
         pirata barbanegra = new pirata("negra barba",1,10,100,100,10,1,"humano");
 
-        barbanegra.addGolpe(new golpe("escuiridão",50,60));
+        barbanegra.addGolpe(new golpe("escuridão",50,60));
         barbanegra.addGolpe(new golpe("corte negro",40,35));
         barbanegra.addGolpe(new golpe("soco negro",20,10));
+        barbanegra.addGolpe(new golpe("Kurouzu", 0, 30));
 
         luffy.gomo_pistol(barbanegra);
+        barbanegra.atacar(luffy);
     }
 }
