@@ -23,38 +23,7 @@ abstract class existencia{
         this.forca = forca;
         this.defesa = defesa;
         this.raca = raca;
-
-        switch (raca) {
-            case "humano":
-                this.vida +=15;
-                this.defesa += 1;
-                this.stamina += 15;
-
-            case "Gigante":
-                this.vida += 100;
-                this.forca += 3;
-                this.stamina -= 60;
-                this.defesa += 2;
-
-            case "HomemPeixe":
-                this.vida += 120;
-                this.forca += 2;
-                this.defesa += 2;
-                this.stamina += 16;
-
-            case "Mink":
-                this.vida += 15;
-                this.forca += 1 ;
-                this.defesa += 1;
-                this.stamina += 100;
-
-            case "Cyborg":
-                this.vida += 75;
-                this.forca += 3;
-                this.defesa += 5;
-                this.stamina += 10;
-
-        }
+        
     }
 
     public float GetForca(){
@@ -221,7 +190,7 @@ class pirata extends inimigo{
 
         //essa variavel pega o dano recebido junto com a defesa
         //❌❌❌ arrumar o dano recebido, ta dando negativo
-        float danorecebido = golpe.dano - (golpe.dano * (p.getDefesa() /10));
+        float danorecebido =Math.abs( golpe.dano - (golpe.dano * (p.getDefesa() /10)));
 
         // estou fazendo testes para gastar stamina
         if (this.stamina >= golpe.energia){
