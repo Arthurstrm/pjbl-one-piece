@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import  javax.swing.*;
@@ -196,7 +197,6 @@ class pirata extends inimigo{
         if (this.stamina >= golpe.energia){
             p.vida -= danorecebido;
             this.stamina -= golpe.getEnergia();
-            System.out.println(danorecebido);
             System.out.printf("%s usou o golpe %s, causando %.0f de dano\n", this.getNome(), golpe.getNome(), danorecebido );
         }else {
             System.out.printf("%s socou %s, causando 5 de dano\n", this.getNome(), p.getNome());
@@ -236,9 +236,30 @@ class Marinheiro extends inimigo{
     }
 }
 
+// tendando iniciar o inferno/ merda/ capeta/ capiroto/ belzebu/ diabo / bixo piruleta de interdace grafica
+
+class tela extends  JPanel{
+    private static final int ALTURA_BARRA_TITULO = 20;
+    private JFrame frame;
+    public tela(String nome) {
+
+        frame = new JFrame(nome); // cria um frame
+        frame.add(this); // insere o território no frame
+        frame.setSize(3000, 800 + ALTURA_BARRA_TITULO ); // define as dimensões do frame
+        frame.setVisible(true); // torna o frame visível
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // define como o frame é fechado
+        setBackground(Color.getHSBColor(0, 100, 100));// muda a cor do fundo
+    }
+
+}
+
+class teste extends  JFrame{
+}
+
 public class onepiece {
     public static void main(String[] args) {
 
+        tela tela = new tela("RPG one piece");
         // ainda tem que pensar como fazer o sistema de ganhar stamina
         Zoro zoro = new Zoro("Zoro",1,0,100,100,10,50,"humano");
         Luffy luffy = new Luffy("luffy",1,0,100,100,10,1,"humano");
