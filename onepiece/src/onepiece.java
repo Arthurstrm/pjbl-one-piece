@@ -2,6 +2,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 import  javax.swing.*;
+import  java.io.BufferedReader;
+import  java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
+
 
 abstract class existencia{
 
@@ -256,8 +261,57 @@ class tela extends  JPanel{
 class teste extends  JFrame{
 }
 
+
+class Teste{
+    public Teste(String teste) {
+    }
+
+    public static void lertxt(String filePath){
+        String linha;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))){
+            while ((linha = br.readLine()) != null){
+                String[] dados = linha.split(" - ");
+                String nome = dados[0];
+                int idade = Integer.parseInt(dados[1]);
+                String poder = dados[2];
+
+                System.out.println("nome " + nome + "Idade" + idade + " poder" + poder);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        lertxt(filePath);
+
+    }
+}
+
 public class onepiece {
+    public onepiece(String teste) {
+    }
+
+    public static void lertxt(String filePath){
+        String linha;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))){
+            while ((linha = br.readLine()) != null){
+                String[] dados = linha.split(" - ");
+                String nome = dados[0];
+                int idade = Integer.parseInt(dados[1]);
+                String poder = dados[2];
+
+                System.out.println("nome " + nome + "Idade" + idade + " poder" + poder);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
     public static void main(String[] args) {
+        String filePath = "C:\\Users\\lg680\\Downloads\\one piece";
+        lertxt(filePath);
+
 
         tela tela = new tela("RPG one piece");
         // ainda tem que pensar como fazer o sistema de ganhar stamina
