@@ -6,7 +6,9 @@ import  java.io.BufferedReader;
 import  java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-
+import java.io.FileNotFoundException;
+import java.io.File;
+import java.util.Scanner;
 
 abstract class existencia{
 
@@ -308,9 +310,13 @@ public class onepiece {
 
     }
 
-    public static void main(String[] args) {
-        String filePath = "C:\\Users\\lg680\\Downloads\\one piece";
-        lertxt(filePath);
+    public static void main(String[] args) throws FileNotFoundException {
+        File file = new File ("C:/Users/lg680/POO/pjbl-one-piece5/onepiece/Teste.txt");
+        Scanner scan = new Scanner(file);
+        while(scan.hasNextLine()){
+            System.out.println(scan.nextLine());
+
+        }
 
 
         tela tela = new tela("RPG one piece");
