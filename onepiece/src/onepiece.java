@@ -38,6 +38,11 @@ abstract class existencia{
         return  forca;
     }
 
+    public boolean ganharDegesa(int d){
+        this.defesa = d;
+        return true;
+    }
+
     public boolean reduzirStamina(int s){
         if (stamina <= 0){
             System.out.println("stamina insufisciente");
@@ -125,7 +130,8 @@ class Luffy extends personagem{
     public void gomo_pistol(inimigo i){
         if (reduzirStamina(10) == true){
             System.out.printf("luffy usou o gomo-gomo no pistol, causando %.0f de dano\n", causardano(20));
-            i.vida -= causardano(20);
+            float danorecebido =Math.abs( causardano(20) - (causardano(20) * (i.getDefesa() /10)));
+            i.vida -= danorecebido;
         }
     }
 
@@ -195,7 +201,9 @@ class pirata extends inimigo{
     public void atacar(personagem p){
         int teste = aleatorio.nextInt(golpes.size());
         golpe golpe = golpes.get(teste);
-
+        if (golpe.getNome() == "Kurouzu"){
+            this.ganharDegesa(10);
+        }
         //essa variavel pega o dano recebido junto com a defesa
         //❌❌❌ arrumar o dano recebido, ta dando negativo
         float danorecebido =Math.abs( golpe.dano - (golpe.dano * (p.getDefesa() /10)));
@@ -253,7 +261,7 @@ class tela extends  JPanel{
         frame = new JFrame(nome); // cria um frame
         frame.add(this); // insere o território no frame
         frame.setSize(3000, 800 + ALTURA_BARRA_TITULO ); // define as dimensões do frame
-        frame.setVisible(true); // torna o frame visível
+        frame.setVisible(false); // torna o frame visível
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // define como o frame é fechado
         setBackground(Color.getHSBColor(0, 100, 100));// muda a cor do fundo
     }
@@ -311,7 +319,7 @@ public class onepiece {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File ("C:/Users/lg680/POO/pjbl-one-piece2/onepiece/Teste.txt");
+        File file = new File ("C:/Users/vinicius.gogoglla.GRUPOMARISTA/IdeaProjects/pjbl-one-piece0/onepiece/Teste.txt");
         Scanner scan = new Scanner(file);
         while(scan.hasNextLine()){
             System.out.println(scan.nextLine());
@@ -330,7 +338,10 @@ public class onepiece {
         barbanegra.addGolpe(new golpe("soco negro",20,10));
         barbanegra.addGolpe(new golpe("Kurouzu", 0, 30));
 
-        luffy.gomo_pistol(barbanegra);
         barbanegra.atacar(luffy);
+        barbanegra.mostravida();
+        luffy.gomo_pistol(barbanegra);
+        barbanegra.mostravida();
+
     }
 }
