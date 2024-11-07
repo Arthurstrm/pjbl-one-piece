@@ -311,7 +311,7 @@ public class onepiece {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File ("C:/Users/lg680/POO/pjbl-one-piece5/onepiece/Teste.txt");
+        File file = new File ("C:/Users/lg680/POO/pjbl-one-piece2/onepiece/Teste.txt");
         Scanner scan = new Scanner(file);
         while(scan.hasNextLine()){
             System.out.println(scan.nextLine());

@@ -1,0 +1,3 @@
+nome,idade,poder, 
+Luffy,19,Akuma no Mi
+Zoro,21,Espadachim
