@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Random;
 import  javax.swing.*;
@@ -256,19 +258,28 @@ class Marinheiro extends inimigo{
 class tela extends  JPanel{
     private static final int ALTURA_BARRA_TITULO = 20;
     private JFrame frame;
+
     public tela(String nome) {
 
         frame = new JFrame(nome); // cria um frame
         frame.add(this); // insere o território no frame
         frame.setSize(3000, 800 + ALTURA_BARRA_TITULO ); // define as dimensões do frame
-        frame.setVisible(false); // torna o frame visível
+        frame.setVisible(true); // torna o frame visível
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // define como o frame é fechado
         setBackground(Color.getHSBColor(0, 100, 100));// muda a cor do fundo
+        JButton botao = new JButton();
+        frame.add(botao);
+
+        botao.setBounds(300,500,200,100);
+
+        botao.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setBackground(Color.red);
+            }
+        });
     }
 
-}
-
-class teste extends  JFrame{
 }
 
 
@@ -319,7 +330,7 @@ public class onepiece {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File ("C:/Users/vinicius.gogoglla.GRUPOMARISTA/IdeaProjects/pjbl-one-piece0/onepiece/Teste.txt");
+        File file = new File ("C:/Users/lg680/POO/pjbl-one-piece1.1/onepiece/Teste.txt");
         Scanner scan = new Scanner(file);
         while(scan.hasNextLine()){
             System.out.println(scan.nextLine());
