@@ -262,26 +262,47 @@ class Tela extends JPanel {
     public Tela(String nome) {
         // Criação do frame
         frame = new JFrame(nome);
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
         frame.add(this); // Adiciona o painel na janela
-        frame.setSize(800, 600 + ALTURA_BARRA_TITULO); // Define o tamanho do frame
         frame.setVisible(true); // Torna o frame visível
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Fecha o aplicativo quando o frame for fechado
+
+        /*ImageIcon imagem1 = new ImageIcon("C:/Users/vinig/IdeaProjects/pjbl-one-piece1/onepiece/src/luffy.jpg");
+
+        JButton luffyescolha = new JButton(imagem1);
+        luffyescolha.setBounds(0,200,870,720);
+        */
+
 
         // Criando os botôes
         JButton botaoatack = new JButton("Alterar Cor");
         JButton botaoespecial = new JButton("Especial");
-        JButton golpe1 = new JButton("gomu-gomu no pistol");
-        golpe1.setVisible(true);
+        JButton golpe1 = new JButton("pistol");
         JButton golpe2 = new JButton("gatiling");
-        golpe1.setBounds(50, 50, 200, 100);
 
-        botaoatack.setBounds(110, 500, 200, 100); // Posição e tamanho do botão
+
+        botaoatack.setBounds(50, 500, 200, 100); // Posição e tamanho do botão
         botaoespecial.setBounds(500, 500, 200, 100);
 
         botaoespecial.setBounds(500, 500, 200, 100);
 
-        golpe1.setBounds(50, 50, 200, 100); // Posição e tamanho do botão
-
+        golpe1.setBounds(110, 500, 200, 100); // Posição e tamanho do botão
+        /*
+        botaoatack.setVisible(false);
+        botaoespecial.setVisible(false);
+        golpe1.setVisible(false);
+        luffyescolha.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                luffyescolha.setVisible(false);
+                botaoatack.setVisible(true);
+                botaoespecial.setVisible(true);
+                golpe1.setVisible(false);
+                repaint(); // Solicita uma nova pintura para atualizar a tela
+            }
+        });*/
 
         botaoatack.addActionListener(new ActionListener() {
             @Override
@@ -297,15 +318,16 @@ class Tela extends JPanel {
         this.setLayout(null); // Usando layout absoluto
         add(botaoatack);
         add(botaoespecial);
+        add(golpe1);
+        //add(luffyescolha);
     }
 
     // Sobrescreve o método paintComponent para desenhar o quadrado
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g); // Chama o método da superclasse para garantir que a pintura padrão ocorra
-
         g.setColor(Color.GRAY); // Define a cor do quadrado
-        g.fillRect(0, 480, 800, 20); // Desenha o quadrado
+        g.fillRect(0, 850, 3000, 35); // Desenha o quadrado
     }
 }
 
@@ -357,7 +379,7 @@ public class onepiece {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File ("C:/Users/lg680/POO/pjbl-one-piece1.1/onepiece/Teste.txt");
+        File file = new File ("C:/Users/vinig/IdeaProjects/pjbl-one-piece1/onepiece/Teste.txt");
         Scanner scan = new Scanner(file);
         while(scan.hasNextLine()){
             System.out.println(scan.nextLine());
