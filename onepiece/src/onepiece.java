@@ -256,81 +256,167 @@ class Marinheiro extends inimigo{
 // tendando iniciar o inferno/ merda/ capeta/ capiroto/ belzebu/ diabo / bixo piruleta de interdace grafica
 
 class Tela extends JPanel {
-    private static final int ALTURA_BARRA_TITULO = 20;
     private JFrame frame;
+    private int vidaInimigo = 100;
+    private int energiaInimigo = 100;
+    private int vidaAliado = 100;
+    private int energiaAliado = 100;
+    private boolean turnoDoAliado = true; // Variável para controlar de quem é o turno
+
+    private JButton golpe1;
+    private JButton golpe2;
+    private JButton golpe3;
+    private pirata barbarnegra = new pirata("negra barba",1,10,100,100,10,1,"humano");
+    private  Luffy luffy =  new Luffy("luffy",1,0,100,100,10,1,"humano");
+    private  inimigo luta = barbarnegra;
 
     public Tela(String nome) {
-        // Criação do frame
+        // Configurações do frame
         frame = new JFrame(nome);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+        frame.add(this);
         frame.setVisible(true);
-        frame.setLocationRelativeTo(null);
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
-        frame.add(this); // Adiciona o painel na janela
-        frame.setVisible(true); // Torna o frame visível
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Fecha o aplicativo quando o frame for fechado
 
-        /*ImageIcon imagem1 = new ImageIcon("C:/Users/vinig/IdeaProjects/pjbl-one-piece1/onepiece/src/luffy.jpg");
+        // Configurações dos botões de ataques
+        golpe1 = new JButton("Gomo Pistol");
+        golpe2 = new JButton("Gomo Gatiling");
+        golpe3 = new JButton("Gomo Rifle");
 
-        JButton luffyescolha = new JButton(imagem1);
-        luffyescolha.setBounds(0,200,870,720);
-        */
+        // Personalização dos botões
+        golpe1.setBounds(50, 450, 150, 50);
+        golpe2.setBounds(250, 450, 150, 50);
+        golpe3.setBounds(450, 450, 150, 50);
 
+        golpe1.setBackground(Color.ORANGE);
+        golpe2.setBackground(Color.YELLOW);
+        golpe3.setBackground(Color.PINK);
+        golpe1.setForeground(Color.BLACK);
+        golpe2.setForeground(Color.BLACK);
+        golpe3.setForeground(Color.BLACK);
+        Font buttonFont = new Font("Arial", Font.BOLD, 12);
+        golpe1.setFont(buttonFont);
+        golpe2.setFont(buttonFont);
+        golpe3.setFont(buttonFont);
 
-        // Criando os botôes
-        JButton botaoatack = new JButton("Alterar Cor");
-        JButton botaoespecial = new JButton("Especial");
-        JButton golpe1 = new JButton("pistol");
-        JButton golpe2 = new JButton("gatiling");
+        // Listeners para botões de ataque
 
-
-        botaoatack.setBounds(50, 500, 200, 100); // Posição e tamanho do botão
-        botaoespecial.setBounds(500, 500, 200, 100);
-
-        botaoespecial.setBounds(500, 500, 200, 100);
-
-        golpe1.setBounds(110, 500, 200, 100); // Posição e tamanho do botão
-        /*
-        botaoatack.setVisible(false);
-        botaoespecial.setVisible(false);
-        golpe1.setVisible(false);
-        luffyescolha.addActionListener(new ActionListener() {
+        golpe1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                luffyescolha.setVisible(false);
-                botaoatack.setVisible(true);
-                botaoespecial.setVisible(true);
-                golpe1.setVisible(false);
-                repaint(); // Solicita uma nova pintura para atualizar a tela
-            }
-        });*/
-
-        botaoatack.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                botaoatack.setVisible(false);
-                botaoespecial.setVisible(false);
-                golpe1.setVisible(true);
-                repaint(); // Solicita uma nova pintura para atualizar a tela
+                luffy.gomo_pistol(luta);
+                repaint();
             }
         });
 
-        // Adiciona o botão ao painel
-        this.setLayout(null); // Usando layout absoluto
-        add(botaoatack);
-        add(botaoespecial);
+        golpe2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                realizarAtaque(30);
+            }
+        });
+
+        golpe3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                realizarAtaque(40);
+            }
+        });
+
+        // Adiciona os botões ao painel
+        this.setLayout(null);
         add(golpe1);
-        //add(luffyescolha);
+        add(golpe2);
+        add(golpe3);
+
+        // Atualiza os botões no início
+        atualizarBotoes();
     }
 
-    // Sobrescreve o método paintComponent para desenhar o quadrado
+    // Método para simular um ataque do aliado, reduzindo a vida do inimigo e a energia do aliado
+    private void realizarAtaque(int dano) {
+        if (turnoDoAliado) {
+            vidaInimigo -= dano;
+            if (vidaInimigo < 0) vidaInimigo = 0;
+            energiaAliado -= 10;
+            if (energiaAliado < 0) energiaAliado = 0;
+            turnoDoAliado = false; // Alterna o turno para o inimigo
+            atualizarBotoes();
+            repaint();
+            // Inicia o ataque do inimigo após um pequeno atraso para simular o turno
+            Timer timer = new Timer(1000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    atacarAliado(15);
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
+    }
+
+    // Método para o ataque do inimigo
+    private void atacarAliado(int dano) {
+        if (!turnoDoAliado) {
+            vidaAliado -= dano;
+            if (vidaAliado < 0) vidaAliado = 0;
+            turnoDoAliado = true; // Alterna o turno de volta para o aliado
+            atualizarBotoes();
+            repaint();
+        }
+    }
+
+    // Método para habilitar/desabilitar botões com base no turno
+    private void atualizarBotoes() {
+        golpe1.setEnabled(turnoDoAliado);
+        golpe2.setEnabled(turnoDoAliado);
+        golpe3.setEnabled(turnoDoAliado);
+    }
+
+    // Método para desenhar a interface
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g); // Chama o método da superclasse para garantir que a pintura padrão ocorra
-        g.setColor(Color.GRAY); // Define a cor do quadrado
-        g.fillRect(0, 850, 3000, 35); // Desenha o quadrado
+        super.paintComponent(g);
+
+        // Novo fundo da tela
+        g.setColor(new Color(60, 60, 120)); // Azul escuro
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        // Barra de vida do aliado (agora à esquerda)
+        g.setColor(Color.GREEN);
+        g.fillRect(50, 50, vidaAliado * 2, 20);
+        g.setColor(Color.BLACK);
+        g.drawRect(50, 50, 200, 20);
+        g.drawString("Vida do Aliado: " + vidaAliado, 60, 65);
+
+        // Barra de energia do aliado
+        g.setColor(Color.ORANGE);
+        g.fillRect(50, 80, energiaAliado * 2, 20);
+        g.setColor(Color.BLACK);
+        g.drawRect(50, 80, 200, 20);
+        g.drawString("Energia do Aliado: " + energiaAliado, 60, 95);
+
+        // Barra de vida do inimigo
+        g.setColor(Color.RED);
+        g.fillRect(550, 50, vidaInimigo * 2, 20);
+        g.setColor(Color.BLACK);
+        g.drawRect(550, 50, 200, 20);
+        g.drawString("Vida do Inimigo: " + barbarnegra.vida, 560, 65);
+
+        // Barra de energia do inimigo
+        g.setColor(Color.BLUE);
+        g.fillRect(550, 80, energiaInimigo * 2, 20);
+        g.setColor(Color.BLACK);
+        g.drawRect(550, 80, 200, 20);
+        g.drawString("Energia do Inimigo: " + energiaInimigo, 560, 95);
+
+        // Desenho dos mini personagens
+        g.setColor(Color.ORANGE);
+        g.fillOval(600, 300, 50, 50); // Mini personagem 1
+        g.setColor(Color.GREEN);
+        g.fillOval(700, 300, 50, 50); // Mini personagem 2
     }
 }
-
 
 class Teste{
     public Teste(String teste) {
