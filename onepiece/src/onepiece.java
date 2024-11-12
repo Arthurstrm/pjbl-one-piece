@@ -255,31 +255,47 @@ class Marinheiro extends inimigo{
 
 // tendando iniciar o inferno/ merda/ capeta/ capiroto/ belzebu/ diabo / bixo piruleta de interdace grafica
 
-class tela extends  JPanel{
+class Tela extends JPanel {
     private static final int ALTURA_BARRA_TITULO = 20;
     private JFrame frame;
 
-    public tela(String nome) {
+    public Tela(String nome) {
+        // Criação do frame
+        frame = new JFrame(nome);
+        frame.add(this); // Adiciona o painel na janela
+        frame.setSize(800, 600 + ALTURA_BARRA_TITULO); // Define o tamanho do frame
+        frame.setVisible(true); // Torna o frame visível
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Fecha o aplicativo quando o frame for fechado
 
-        frame = new JFrame(nome); // cria um frame
-        frame.add(this); // insere o território no frame
-        frame.setSize(3000, 800 + ALTURA_BARRA_TITULO ); // define as dimensões do frame
-        frame.setVisible(true); // torna o frame visível
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // define como o frame é fechado
-        setBackground(Color.getHSBColor(0, 100, 100));// muda a cor do fundo
-        JButton botao = new JButton();
-        frame.add(botao);
+        setBackground(Color.getHSBColor(0, 100, 100)); // Cor de fundo do painel
 
-        botao.setBounds(300,500,200,100);
-
-        botao.addActionListener(new ActionListener() {
+        // Criando um botão
+        JButton botaoatack = new JButton("Alterar Cor");
+        JButton botaoespecial = new JButton("Especial");
+        botaoatack.setBounds(150, 500, 200, 100); // Posição e tamanho do botão
+        botaoespecial.setBounds(500, 500, 200, 100);
+        botaoatack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setBackground(Color.red);
+                setBackground(Color.RED); // Altera a cor do fundo para vermelho ao clicar
+                repaint(); // Solicita uma nova pintura para atualizar a tela
             }
         });
+
+        // Adiciona o botão ao painel
+        this.setLayout(null); // Usando layout absoluto
+        add(botaoatack);
+        add(botaoespecial);
     }
 
+    // Sobrescreve o método paintComponent para desenhar o quadrado
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g); // Chama o método da superclasse para garantir que a pintura padrão ocorra
+
+        g.setColor(Color.GRAY); // Define a cor do quadrado
+        g.fillRect(0, 470, 800, 20); // Desenha o quadrado
+    }
 }
 
 
@@ -338,7 +354,7 @@ public class onepiece {
         }
 
 
-        tela tela = new tela("RPG one piece");
+        Tela tela = new Tela("RPG one piece");
         // ainda tem que pensar como fazer o sistema de ganhar stamina
         Zoro zoro = new Zoro("Zoro",1,0,100,100,10,50,"humano");
         Luffy luffy = new Luffy("luffy",1,0,100,100,10,1,"humano");
