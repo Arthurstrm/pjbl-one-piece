@@ -44,11 +44,6 @@ abstract class existencia{
         return  forca;
     }
 
-    public boolean ganharDegesa(int d){
-        this.defesa = d;
-        return true;
-    }
-
     public int reduzirStamina(int s){
         if (stamina < s){
             System.out.println("stamina insufisciente");
@@ -132,37 +127,39 @@ class Luffy extends personagem{
     }
 
     // metodo do golpe gomo-gomo no pistol
-    public void gomo_pistol(inimigo i){
+    public boolean gomo_pistol(inimigo i){
         if (reduzirStamina(20) > 0){
-            System.out.printf("luffy usou o gomo-gomo no pistol, causando %.0f de dano\n", causardano(20));
             float danorecebido =Math.abs( causardano(20) - (causardano(20) * (i.getDefesa() /10)));
+            System.out.printf("luffy usou o gomo-gomo no pistol, causando %.0f de dano\n", danorecebido);
             i.vida -= danorecebido;
+            return true;
         }else {
-            System.out.println("energia insuficieneteetasfasvasfabg");
+            System.out.println("energia insuficienete\n");
+            return false;
         }
     }
 
-    // AINDA VOU FAZER, confia 😎
-    // SISTEMA DE HAKI, sistema onde vai gastar stamina a mais por galpe, além de ganhar dano e defesa
-    // ainde tem que ser implementado
-
-    public void gomoGatiling(inimigo i) {
+    public boolean gomoGatiling(inimigo i) {
         if (reduzirStamina(40) > 0) {
-        System.out.println("luffy usou gomo-gomo no GATILING, causando 40 de dano\n");
         float danorecebido = Math.abs(causardano(40) - (causardano(40) * (i.getDefesa() / 10)));
+            System.out.printf("luffy usou gomo-gomo no GATILING, causando %.0f de dano\n", danorecebido);
         i.vida -= danorecebido;
+        return true;
         }else {
-            System.out.println("energia insuficieneteetasfasvasfabg");
+            System.out.println("energia insuficienete\n");
+            return false;
         }
     }
 
-    public void gomoRifle(inimigo i){
+    public boolean gomoRifle(inimigo i){
         if (reduzirStamina(70) > 0) {
-            System.out.println("Luffy usou gomo-gomo no rifle causando, 70 de dano\n");
             float danorecebido = Math.abs(causardano(70) - (causardano(70) * (i.getDefesa() / 10)));
+            System.out.printf("Luffy usou gomo-gomo no rifle causando, %.0f de dano\n", danorecebido);
             i.vida -= danorecebido;
+            return true;
         }else {
-            System.out.println("energia insuficieneteetasfasvasfabg");
+            System.out.println("energia insuficienete\n");
+            return false;
         }
     }
 }
@@ -174,13 +171,39 @@ class Zoro extends personagem{
         super(nome, nivel, experiencia, vida, stamina, forca, defesa, raca);
     }
 
-    public void Asura(inimigo i){
-        System.out.println("Golpe Ashura usado, causando 30 de dano");
-        i.vida -= 30;
+    public float causardano(int dano){
+        return dano + (dano * (GetForca() / 10));
     }
+
+    public void Asura(inimigo i){
+        if (reduzirStamina(20) > 0 ){
+            float danorecebido = Math.abs(causardano(30) - (causardano(30) * (i.getDefesa() / 10)));
+            System.out.printf("Golpe Ashura usado, causando %.0f de dano", danorecebido);
+            i.vida -= danorecebido;
+        }else {
+            System.out.println("energia insuficienete");
+        }
+
+    }
+
     public void Ul_TorGari(inimigo i){
-        System.out.println("Golpe Ul-Tora Gari usado, causando 40 de dano");
-        i.vida -= 40;
+        if (reduzirStamina(20) > 0 ){
+            float danorecebido = Math.abs(causardano(40) - (causardano(40) * (i.getDefesa() / 10)));
+            System.out.printf("Golpe Ul-Tora Gari usado, causando %.0f de dano", danorecebido);
+            i.vida -= danorecebido;
+        }else {
+            System.out.println("energia insuficienete");
+        }
+    }
+
+    public void shishi_sonson(inimigo i){
+        if (reduzirStamina(20) > 0 ){
+            float danorecebido = Math.abs(causardano(70) - (causardano(47) * (i.getDefesa() / 10)));
+            System.out.printf("shishi sonson, causando %.0f de dano", danorecebido);
+            i.vida -= danorecebido;
+        }else {
+            System.out.println("energia insuficienete");
+        }
     }
 }
 
@@ -195,88 +218,43 @@ abstract class inimigo extends existencia{
 
 
 //classe pirata
-class pirata extends inimigo{
+class pirata extends inimigo {
 
     Random aleatorio = new Random();
     private ArrayList<golpe> golpes;
 
 
-    public pirata (String nome, int nivel, int experiencia, int vida, int stamina, int forca, int defesa, String raca){
+    public pirata(String nome, int nivel, int experiencia, int vida, int stamina, int forca, int defesa, String raca) {
         super(nome, nivel, experiencia, vida, stamina, forca, defesa, raca);
         this.golpes = new ArrayList<>();
     }
 
-    public void mostravida(){
+    public void mostravida() {
         System.out.printf("Vida atual do inimigo: %d\n", this.vida);
     }
 
-    public void addGolpe(golpe g){
+    public void addGolpe(golpe g) {
         this.golpes.add(g);
     }
 
     @Override
-    public void atacar(personagem p){
+    public void atacar(personagem p) {
         int teste = aleatorio.nextInt(golpes.size());
         golpe golpe = golpes.get(teste);
-        if (golpe.getNome() == "Kurouzu"){
-            this.ganharDegesa(10);
-        }
-        //essa variavel pega o dano recebido junto com a defesa
-        //❌❌❌ arrumar o dano recebido, ta dando negativo
-        float danorecebido =Math.abs( golpe.dano - (golpe.dano * (p.getDefesa() /10)));
+        float danorecebido = Math.abs(golpe.dano - (golpe.dano * (p.getDefesa() / 10)));
 
-        // estou fazendo testes para gastar stamina
-        if (this.stamina >= golpe.energia){
+        if (this.stamina >= golpe.energia) {
             p.vida -= danorecebido;
             this.stamina -= golpe.getEnergia();
-            System.out.printf("%s usou o golpe %s, causando %.0f de dano\n", this.getNome(), golpe.getNome(), danorecebido );
-        }else {
+            System.out.printf("%s usou o golpe %s, causando %.0f de dano\n", this.getNome(), golpe.getNome(), danorecebido);
+        } else {
             System.out.printf("%s socou %s, causando 5 de dano\n", this.getNome(), p.getNome());
-            p.vida -= 5;
+            p.vida -= 10;
         }
     }
-
-    //só para ver se a stamina ta funcionando
-    public void mostrarStamina(){
-        System.out.println(stamina);
-    }
 }
-
-
-//classe inimigo marinheiro
-class Marinheiro extends inimigo{
-    Random aleatorio = new Random();
-    private ArrayList<golpe> golpes;
-    public Marinheiro (String nome, int nivel, int experiencia, int vida, int stamina, int forca, int defesa, String raca){
-        super(nome, nivel, experiencia, vida, stamina, forca, defesa, raca);
-        this.golpes = new ArrayList<>();
-    }
-
-    public void mostravida(personagem p){
-        System.out.printf("Vida atual do inimigo: %d\n", this.vida);
-    }
-
-    public void addGolpe(golpe g){
-        this.golpes.add(g);
-    }
-
-    @Override
-    public void atacar(personagem p){
-        int golpe  = aleatorio.nextInt(golpes.size());
-        golpe aleatorio = golpes.get(golpe);
-        System.out.printf("%s usou o golde %s, causando %d de dano\n", getNome(), aleatorio.getNome(), aleatorio.dano);
-    }
-}
-
-// tendando iniciar o inferno/ merda/ capeta/ capiroto/ belzebu/ diabo / bixo piruleta de interdace grafica
-
 class Tela extends JPanel {
     private JFrame frame;
-    private int vidaInimigo = 100;
-    private int energiaInimigo = 100;
-    private int vidaAliado = 100;
-    private int energiaAliado = 100;
-    private boolean turnoDoAliado = true; // Variável para controlar de quem é o turno
 
     private JButton golpe1;
     private JButton golpe2;
@@ -284,20 +262,10 @@ class Tela extends JPanel {
     private JButton ataques;
     private JButton espercial;
 
-    private pirata barbarnegra = new pirata("negra barba",1,10,100,100,10,1,"humano");
-    private  Luffy luffy =  new Luffy("luffy",1,0,100,100,10,1,"humano");
+    private pirata barbarnegra = new pirata("barba negra",1,10,600,200,10,5,"humano");
+    private  Luffy luffy =  new Luffy("luffy",1,0,400,200,7,4,"humano");
 
     private  inimigo luta = barbarnegra;
-
-    private void turnoinimigo(){
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        luta.atacar(luffy);
-    }
 
     protected void mostraratack(){
         golpe1.setVisible(true);
@@ -321,6 +289,7 @@ class Tela extends JPanel {
         barbarnegra.addGolpe(new golpe("escuridão",50,60));
         barbarnegra.addGolpe(new golpe("corte negro",40,35));
         barbarnegra.addGolpe(new golpe("soco negro",20,10));
+        barbarnegra.addGolpe(new golpe("atirar",20,0));
 
 
         frame = new JFrame(nome);
@@ -355,10 +324,12 @@ class Tela extends JPanel {
         golpe2.setForeground(Color.BLACK);
         golpe3.setForeground(Color.BLACK);
 
-        Font buttonFont = new Font("Arial", Font.BOLD, 12);
+        Font buttonFont = new Font("Arial Black", Font.ITALIC, 12);
         golpe1.setFont(buttonFont);
         golpe2.setFont(buttonFont);
         golpe3.setFont(buttonFont);
+        ataques.setFont(buttonFont);
+        espercial.setFont(buttonFont);
 
 
         ataques.addActionListener(new ActionListener() {
@@ -381,29 +352,45 @@ class Tela extends JPanel {
         golpe1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                luffy.gomo_pistol(luta);
-                esconderatack();
-                animecaopistol();
-                try{
-                    Thread.sleep(1000);
+                if (luffy.gomo_pistol(luta) == true){
+                    esconderatack();
                     animecaopistol();
+                    verificarvida();
+                    repaint();
 
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            luta.atacar(luffy);
+                            x= 20;
+                            repaint();
+                        }
+                    }, 200);
+                } else{
+                    System.out.println("energia insulficiente");
                 }
-                voltaranimicao();
-                verificarvida();
-                repaint();
             }
         });
 
         golpe2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                luffy.gomoGatiling(luta);
-                esconderatack();
-                verificarvida();
-                repaint();
+                if (luffy.gomoGatiling(luta) == true){
+                    esconderatack();
+                    animecaopistol();
+                    repaint();
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            luta.atacar(luffy);
+                            x= 20;
+                            repaint();
+                        }
+                    }, 200);
+                } else {
+                    esconderatack();
+                }
+
             }
         });
 
@@ -425,8 +412,6 @@ class Tela extends JPanel {
         add(ataques);
         add(espercial);
 
-        // Atualiza os botões no início
-        atualizarBotoes();
     }
 
     // Método para simular um ataque do aliado, reduzindo a vida do inimigo e a energia do aliado
@@ -450,28 +435,27 @@ class Tela extends JPanel {
             timer.start();
         }
     }*/
-    //💕💕💕💕💕💕 arrumar
-    // Método para o ataque do inimigo
-    private void atacarAliado(int dano) {
-        if (!turnoDoAliado) {
-            vidaAliado -= dano;
-            if (vidaAliado < 0) vidaAliado = 0;
-            turnoDoAliado = true; // Alterna o turno de volta para o aliado
-            atualizarBotoes();
-            repaint();
-        }
-    }
 
-    // Método para habilitar/desabilitar botões com base no turno
-    private void atualizarBotoes() {
-        golpe1.setEnabled(turnoDoAliado);
-        golpe2.setEnabled(turnoDoAliado);
-        golpe3.setEnabled(turnoDoAliado);
-    }
 
     private int x = 20;
     private int y = 0;
+    int j = 0;
+    protected void animacaogatiling(){
+        animecaopistol();
+        repaint();
+        testes();
+        repaint();
+    }
 
+    protected void testes(){
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                x= 20;
+                repaint();
+            }
+        }, 200);  // Atraso de 1 segundo para simular o turno do inimigo
+    }
     protected void animecaopistol(){
         x= 600;
 
@@ -489,35 +473,37 @@ class Tela extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        setBackground(Color.cyan);
+        Font infoFont = new Font("Arial", Font.BOLD, 13);
+        setBackground(Color.lightGray);
         // Barra de vida do aliado (agora à esquerda)
+        g.setFont(infoFont);
         g.setColor(Color.red);
-        g.fillRect(50, 50, luffy.vida * 2, 20);
+        g.fillRect(50, 50, luffy.vida /2, 20);
         g.setColor(Color.black);
         g.drawRect(50, 50, 200, 20);
 
         g.drawString("Vida do Luffy: " + luffy.vida, 60, 65);
 
         // Barra de energia do aliado
-        g.setColor(Color.BLUE);
-        g.fillRect(50, 80, luffy.getStamina() * 2, 20);
+        g.setColor(Color.cyan);
+        g.fillRect(50, 80, luffy.getStamina() , 20);
         g.setColor(Color.black);
         g.drawRect(50, 80, 200, 20);
         g.drawString("Energia do Luffy: " + luffy.getStamina(), 60, 95);
 
         // Barra de vida do inimigo
         g.setColor(Color.RED);
-        g.fillRect(550, 50, barbarnegra.vida * 2, 20);
+        g.fillRect(550, 50, luta.vida / 3, 20);
         g.setColor(Color.BLACK);
         g.drawRect(550, 50, 200, 20);
-        g.drawString("Vida do Inimigo: " + barbarnegra.vida, 560, 65);
+        g.drawString("Vida do Inimigo: " + luta.vida, 560, 65);
 
         // Barra de energia do inimigo
-        g.setColor(Color.BLUE);
-        g.fillRect(550, 80, barbarnegra.stamina * 2, 20);
+        g.setColor(Color.cyan);
+        g.fillRect(550, 80, luta.stamina, 20);
         g.setColor(Color.BLACK);
         g.drawRect(550, 80, 200, 20);
-        g.drawString("Energia do Inimigo: " + barbarnegra.stamina, 560, 95);
+        g.drawString("Energia do Inimigo: " + luta.stamina, 560, 95);
 
         // Desenho dos mini personagens
         //luffy
@@ -621,7 +607,6 @@ public class onepiece {
         barbanegra.addGolpe(new golpe("escuridão",50,60));
         barbanegra.addGolpe(new golpe("corte negro",40,35));
         barbanegra.addGolpe(new golpe("soco negro",20,10));
-        barbanegra.addGolpe(new golpe("Kurouzu", 0, 30));
 
         barbanegra.atacar(luffy);
         barbanegra.mostravida();
