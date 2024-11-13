@@ -11,6 +11,10 @@ import java.util.List;
 import java.io.FileNotFoundException;
 import java.io.File;
 import java.util.Scanner;
+import java.util.concurrent.*;
+import java.lang.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 abstract class existencia{
 
@@ -45,13 +49,12 @@ abstract class existencia{
         return true;
     }
 
-    public boolean reduzirStamina(int s){
-        if (stamina <= 0){
+    public int reduzirStamina(int s){
+        if (stamina < s){
             System.out.println("stamina insufisciente");
-            return false;
+            return 0;
         } else{
-            stamina -= s;
-            return  true;
+            return  stamina -= s;
         }
     }
 
@@ -130,10 +133,12 @@ class Luffy extends personagem{
 
     // metodo do golpe gomo-gomo no pistol
     public void gomo_pistol(inimigo i){
-        if (reduzirStamina(10) == true){
+        if (reduzirStamina(20) > 0){
             System.out.printf("luffy usou o gomo-gomo no pistol, causando %.0f de dano\n", causardano(20));
             float danorecebido =Math.abs( causardano(20) - (causardano(20) * (i.getDefesa() /10)));
             i.vida -= danorecebido;
+        }else {
+            System.out.println("energia insuficieneteetasfasvasfabg");
         }
     }
 
@@ -141,14 +146,24 @@ class Luffy extends personagem{
     // SISTEMA DE HAKI, sistema onde vai gastar stamina a mais por galpe, além de ganhar dano e defesa
     // ainde tem que ser implementado
 
-    public void gomoGatiling(inimigo i){
+    public void gomoGatiling(inimigo i) {
+        if (reduzirStamina(40) > 0) {
         System.out.println("luffy usou gomo-gomo no GATILING, causando 40 de dano\n");
-        i.vida -= 40;
+        float danorecebido = Math.abs(causardano(40) - (causardano(40) * (i.getDefesa() / 10)));
+        i.vida -= danorecebido;
+        }else {
+            System.out.println("energia insuficieneteetasfasvasfabg");
+        }
     }
 
     public void gomoRifle(inimigo i){
-        System.out.println("Luffy usou gomo-gomo no rifle causando, 70 de dano\n");
-        i.vida -= 70;
+        if (reduzirStamina(70) > 0) {
+            System.out.println("Luffy usou gomo-gomo no rifle causando, 70 de dano\n");
+            float danorecebido = Math.abs(causardano(70) - (causardano(70) * (i.getDefesa() / 10)));
+            i.vida -= danorecebido;
+        }else {
+            System.out.println("energia insuficieneteetasfasvasfabg");
+        }
     }
 }
 
@@ -266,45 +281,118 @@ class Tela extends JPanel {
     private JButton golpe1;
     private JButton golpe2;
     private JButton golpe3;
+    private JButton ataques;
+    private JButton espercial;
+
     private pirata barbarnegra = new pirata("negra barba",1,10,100,100,10,1,"humano");
     private  Luffy luffy =  new Luffy("luffy",1,0,100,100,10,1,"humano");
+
     private  inimigo luta = barbarnegra;
+
+    private void turnoinimigo(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        luta.atacar(luffy);
+    }
+
+    protected void mostraratack(){
+        golpe1.setVisible(true);
+        golpe2.setVisible(true);
+        golpe3.setVisible(true);
+    }
+
+    protected void esconderatack(){
+        golpe1.setVisible(false);
+        golpe2.setVisible(false);
+        golpe3.setVisible(false);
+    }
+    public void verificarvida(){
+        if (luta.vida <= 0){
+            luta.vida = 0;
+        }
+    }
 
     public Tela(String nome) {
         // Configurações do frame
+        barbarnegra.addGolpe(new golpe("escuridão",50,60));
+        barbarnegra.addGolpe(new golpe("corte negro",40,35));
+        barbarnegra.addGolpe(new golpe("soco negro",20,10));
+
+
         frame = new JFrame(nome);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.add(this);
         frame.setVisible(true);
-
         // Configurações dos botões de ataques
         golpe1 = new JButton("Gomo Pistol");
+        golpe1.setVisible(false);
         golpe2 = new JButton("Gomo Gatiling");
+        golpe2.setVisible(false);
         golpe3 = new JButton("Gomo Rifle");
-
+        golpe3.setVisible(false);
+        ataques = new JButton("atacar");
+        espercial = new JButton("especial");
         // Personalização dos botões
-        golpe1.setBounds(50, 450, 150, 50);
-        golpe2.setBounds(250, 450, 150, 50);
-        golpe3.setBounds(450, 450, 150, 50);
+        espercial.setBounds(314, 475, 150, 50);
+        ataques.setBounds(75, 475, 150, 50);
+        golpe1.setBounds(75, 475, 150, 50);
+        golpe2.setBounds(314, 475, 150, 50);
+        golpe3.setBounds(550, 475, 150, 50);
 
-        golpe1.setBackground(Color.ORANGE);
-        golpe2.setBackground(Color.YELLOW);
-        golpe3.setBackground(Color.PINK);
+        golpe1.setBackground(Color.GRAY);
+        golpe2.setBackground(Color.GRAY);
+        golpe3.setBackground(Color.GRAY);
+        ataques.setBackground(Color.GRAY);
+        espercial.setBackground(Color.GRAY);
+        espercial.setForeground(Color.BLACK);
+        ataques.setForeground(Color.BLACK);
         golpe1.setForeground(Color.BLACK);
         golpe2.setForeground(Color.BLACK);
         golpe3.setForeground(Color.BLACK);
+
         Font buttonFont = new Font("Arial", Font.BOLD, 12);
         golpe1.setFont(buttonFont);
         golpe2.setFont(buttonFont);
         golpe3.setFont(buttonFont);
 
+
+        ataques.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                luta.vida -= 10;
+                verificarvida();
+                repaint();
+            }
+        });
         // Listeners para botões de ataque
+        espercial.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            mostraratack();
+            repaint();
+            }
+        });
 
         golpe1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 luffy.gomo_pistol(luta);
+                esconderatack();
+                animecaopistol();
+                try{
+                    Thread.sleep(1000);
+                    animecaopistol();
+
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+                voltaranimicao();
+                verificarvida();
                 repaint();
             }
         });
@@ -312,14 +400,20 @@ class Tela extends JPanel {
         golpe2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                realizarAtaque(30);
+                luffy.gomoGatiling(luta);
+                esconderatack();
+                verificarvida();
+                repaint();
             }
         });
 
         golpe3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                realizarAtaque(40);
+                luffy.gomoRifle(luta);
+                esconderatack();
+                verificarvida();
+                repaint();
             }
         });
 
@@ -328,13 +422,15 @@ class Tela extends JPanel {
         add(golpe1);
         add(golpe2);
         add(golpe3);
+        add(ataques);
+        add(espercial);
 
         // Atualiza os botões no início
         atualizarBotoes();
     }
 
     // Método para simular um ataque do aliado, reduzindo a vida do inimigo e a energia do aliado
-    private void realizarAtaque(int dano) {
+    /*private void realizarAtaque(int dano) {
         if (turnoDoAliado) {
             vidaInimigo -= dano;
             if (vidaInimigo < 0) vidaInimigo = 0;
@@ -353,8 +449,8 @@ class Tela extends JPanel {
             timer.setRepeats(false);
             timer.start();
         }
-    }
-
+    }*/
+    //💕💕💕💕💕💕 arrumar
     // Método para o ataque do inimigo
     private void atacarAliado(int dano) {
         if (!turnoDoAliado) {
@@ -373,48 +469,90 @@ class Tela extends JPanel {
         golpe3.setEnabled(turnoDoAliado);
     }
 
+    private int x = 20;
+    private int y = 0;
+
+    protected void animecaopistol(){
+        x= 600;
+
+    }
+    protected void voltaranimicao(){
+        x= 20;
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
     // Método para desenhar a interface
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        // Novo fundo da tela
-        g.setColor(new Color(60, 60, 120)); // Azul escuro
-        g.fillRect(0, 0, getWidth(), getHeight());
-
+        setBackground(Color.cyan);
         // Barra de vida do aliado (agora à esquerda)
-        g.setColor(Color.GREEN);
-        g.fillRect(50, 50, vidaAliado * 2, 20);
-        g.setColor(Color.BLACK);
+        g.setColor(Color.red);
+        g.fillRect(50, 50, luffy.vida * 2, 20);
+        g.setColor(Color.black);
         g.drawRect(50, 50, 200, 20);
-        g.drawString("Vida do Aliado: " + vidaAliado, 60, 65);
+
+        g.drawString("Vida do Luffy: " + luffy.vida, 60, 65);
 
         // Barra de energia do aliado
-        g.setColor(Color.ORANGE);
-        g.fillRect(50, 80, energiaAliado * 2, 20);
-        g.setColor(Color.BLACK);
+        g.setColor(Color.BLUE);
+        g.fillRect(50, 80, luffy.getStamina() * 2, 20);
+        g.setColor(Color.black);
         g.drawRect(50, 80, 200, 20);
-        g.drawString("Energia do Aliado: " + energiaAliado, 60, 95);
+        g.drawString("Energia do Luffy: " + luffy.getStamina(), 60, 95);
 
         // Barra de vida do inimigo
         g.setColor(Color.RED);
-        g.fillRect(550, 50, vidaInimigo * 2, 20);
+        g.fillRect(550, 50, barbarnegra.vida * 2, 20);
         g.setColor(Color.BLACK);
         g.drawRect(550, 50, 200, 20);
         g.drawString("Vida do Inimigo: " + barbarnegra.vida, 560, 65);
 
         // Barra de energia do inimigo
         g.setColor(Color.BLUE);
-        g.fillRect(550, 80, energiaInimigo * 2, 20);
+        g.fillRect(550, 80, barbarnegra.stamina * 2, 20);
         g.setColor(Color.BLACK);
         g.drawRect(550, 80, 200, 20);
-        g.drawString("Energia do Inimigo: " + energiaInimigo, 560, 95);
+        g.drawString("Energia do Inimigo: " + barbarnegra.stamina, 560, 95);
 
         // Desenho dos mini personagens
+        //luffy
+        g.setColor(Color.pink);
+        g.fillRect(50,400,20,30);
+        g.fillRect(80,400,20,30);
+        g.fillRect(30,350,20,30);
+        g.fillRect(100,360,x,20);
+        g.fillRect(60,325,30,50);
+        g.setColor(Color.orange);
+        g.fillOval(55, 308, 40, 30);
+        g.fillOval(50, 320, 50, 15);
+        g.setColor(Color.red);
+        g.fillRect(50,350,50,50);
+        g.fillRect(30,350,20,10);
+        g.fillRect(100,350,20,10);
+        g.setColor(Color.blue);
+        g.fillRect(50,400,50,10);
+        g.fillRect(50,400,20,15);
+        g.fillRect(80,400,20,15);
+        g.setColor(Color.pink);
+        g.fillRect(60,325,30,20);
+        g.setColor(Color.black);
+        g.fillOval(65,330,5,5);
+        g.fillOval(85,330,5,5);
+        g.setColor(Color.red);
+        g.fillRect(55,320,40,5);
+
+
+
+        g.setColor(Color.gray);
+        g.fillRect(0,425,800,20);
         g.setColor(Color.ORANGE);
         g.fillOval(600, 300, 50, 50); // Mini personagem 1
         g.setColor(Color.GREEN);
-        g.fillOval(700, 300, 50, 50); // Mini personagem 2
     }
 }
 
@@ -474,6 +612,7 @@ public class onepiece {
 
 
         Tela tela = new Tela("RPG one piece");
+        /*
         // ainda tem que pensar como fazer o sistema de ganhar stamina
         Zoro zoro = new Zoro("Zoro",1,0,100,100,10,50,"humano");
         Luffy luffy = new Luffy("luffy",1,0,100,100,10,1,"humano");
@@ -487,7 +626,7 @@ public class onepiece {
         barbanegra.atacar(luffy);
         barbanegra.mostravida();
         luffy.gomo_pistol(barbanegra);
-        barbanegra.mostravida();
+        barbanegra.mostravida();*/
 
     }
 }
