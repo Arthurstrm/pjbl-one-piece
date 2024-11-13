@@ -44,6 +44,17 @@ abstract class existencia{
         return  forca;
     }
 
+    public float aumentardefesa(){
+        defesa += 3;;
+        if (defesa > 10){
+            defesa = 10;
+            return defesa;
+        }
+        return defesa;
+    }
+    public float aumentaratack(){
+        return forca += 3;
+    }
     public int reduzirStamina(int s){
         if (stamina < s){
             System.out.println("stamina insufisciente");
@@ -104,9 +115,10 @@ class personagem extends existencia {
         System.out.printf("Vida atual: %d\n", this.vida);
     }
 
-    public void defender() {
-
-
+    public boolean haki(){
+        aumentaratack();
+        aumentardefesa();
+        return true;
     }
 }
 
@@ -261,10 +273,10 @@ class Tela extends JPanel {
     private JButton golpe3;
     private JButton ataques;
     private JButton espercial;
-
+    private JButton haki;
     private pirata barbarnegra = new pirata("barba negra",1,10,600,200,10,5,"humano");
     private  Luffy luffy =  new Luffy("luffy",1,0,400,200,7,4,"humano");
-
+    private String sla = "nao";
     private  inimigo luta = barbarnegra;
 
     protected void mostraratack(){
@@ -321,13 +333,18 @@ class Tela extends JPanel {
         golpe3.setVisible(false);
         ataques = new JButton("Atacar");
         espercial = new JButton("Especial");
+        haki = new JButton("Haki");
         // Personalização dos botões
+
+        haki.setBounds(550, 475, 150, 50);
         espercial.setBounds(314, 475, 150, 50);
         ataques.setBounds(75, 475, 150, 50);
         golpe1.setBounds(75, 475, 150, 50);
         golpe2.setBounds(314, 475, 150, 50);
         golpe3.setBounds(550, 475, 150, 50);
 
+        haki.setBackground(Color.gray);
+        haki.setForeground(Color.BLACK);
         golpe1.setBackground(Color.GRAY);
         golpe2.setBackground(Color.GRAY);
         golpe3.setBackground(Color.GRAY);
@@ -345,7 +362,8 @@ class Tela extends JPanel {
         golpe3.setFont(buttonFont);
         ataques.setFont(buttonFont);
         espercial.setFont(buttonFont);
-
+        haki.setFont(buttonFont);
+        String ativadohaki = "nao";
 
         ataques.addActionListener(new ActionListener() {
             @Override
@@ -433,6 +451,16 @@ class Tela extends JPanel {
             }
         });
 
+
+        haki.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                luffy.haki();
+                sla = "sim";
+                repaint();
+            }
+        });
+
         golpe3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -468,7 +496,7 @@ class Tela extends JPanel {
         add(golpe3);
         add(ataques);
         add(espercial);
-
+        add(haki);
     }
 
     private int x = 20;
@@ -517,7 +545,6 @@ class Tela extends JPanel {
         g.drawRect(50, 50, 200, 20);
 
         g.drawString("Vida do Luffy: " + luffy.vida, 60, 65);
-
         // Barra de energia do aliado
         g.setColor(Color.cyan);
         g.fillRect(50, 80, luffy.getStamina() , 20);
@@ -544,9 +571,12 @@ class Tela extends JPanel {
         g.setColor(Color.pink);
         g.fillRect(50,400,20,30);
         g.fillRect(80,400,20,30);
+        g.fillRect(60,325,30,50);
+        if (sla == "sim") {
+            g.setColor(Color.black);}  // Quando a vida do Luffy estiver baixa, será vermelha}
         g.fillRect(30,350,20,30);
         g.fillRect(100,360,x,20);
-        g.fillRect(60,325,30,50);
+
         g.setColor(Color.orange);
         g.fillOval(55, 308, 40, 30);
         g.fillOval(50, 320, 50, 15);
