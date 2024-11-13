@@ -278,8 +278,21 @@ class Tela extends JPanel {
         golpe2.setVisible(false);
         golpe3.setVisible(false);
     }
+
+    protected void verificarenergia(){
+        if (luffy.stamina > 200){
+            luffy.stamina = 200;
+        }
+        if (luta.stamina > 200){
+            luta.stamina = 200;
+        }
+    }
+
     public void verificarvida(){
         if (luta.vida <= 0){
+            luta.vida = 0;
+        }
+        if (luffy.vida <= 0){
             luta.vida = 0;
         }
     }
@@ -304,8 +317,8 @@ class Tela extends JPanel {
         golpe2.setVisible(false);
         golpe3 = new JButton("Gomo Rifle");
         golpe3.setVisible(false);
-        ataques = new JButton("atacar");
-        espercial = new JButton("especial");
+        ataques = new JButton("Atacar");
+        espercial = new JButton("Especial");
         // Personalização dos botões
         espercial.setBounds(314, 475, 150, 50);
         ataques.setBounds(75, 475, 150, 50);
@@ -335,9 +348,22 @@ class Tela extends JPanel {
         ataques.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                luta.vida -= 10;
+
+                float danorecebido = Math.abs(luffy.causardano(30) - (luffy.causardano(30) * (luta.getDefesa() / 10)));
+                luta.vida -= danorecebido;
                 verificarvida();
                 repaint();
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (luta.vida >= 1){
+                        luta.atacar(luffy);
+                        repaint();
+                        luffy.stamina += 20;
+                        luta.stamina += 20;
+                        verificarenergia();}
+                    }
+                }, 200);
             }
         });
         // Listeners para botões de ataque
@@ -353,7 +379,6 @@ class Tela extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (luffy.gomo_pistol(luta) == true){
-                    esconderatack();
                     animecaopistol();
                     verificarvida();
                     repaint();
@@ -361,14 +386,20 @@ class Tela extends JPanel {
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
+                            if (luta.vida >= 1){
                             luta.atacar(luffy);
                             x= 20;
                             repaint();
+                            luffy.stamina+= 20;
+                            luta.stamina += 20;
+                            verificarenergia();
+                            
+                            }
                         }
                     }, 200);
                 } else{
-                    System.out.println("energia insulficiente");
                 }
+                esconderatack();
             }
         });
 
@@ -376,31 +407,55 @@ class Tela extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (luffy.gomoGatiling(luta) == true){
-                    esconderatack();
                     animecaopistol();
+                    verificarvida();
                     repaint();
                     new Timer().schedule(new TimerTask() {
                         @Override
                         public void run() {
+                            if (luta.vida >= 1){
                             luta.atacar(luffy);
-                            x= 20;
+                            repaint();}
+                            luffy.stamina+= 20;
+                            luta.stamina += 20;
+                            verificarenergia();
+                            x=20;
                             repaint();
                         }
                     }, 200);
                 } else {
-                    esconderatack();
+                    x= 20;
+                    repaint();
                 }
-
+                esconderatack();
             }
         });
 
         golpe3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                luffy.gomoRifle(luta);
+                if (luta.vida >= 1){
+                    if (luffy.gomoRifle(luta) == true){
+
+                        verificarvida();
+                        repaint();
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (luta.vida >= 1){
+                                    luta.atacar(luffy);
+                                    repaint();}
+                                luffy.stamina+= 20;
+                                luta.stamina += 20;
+                                verificarenergia();
+                                x=20;
+                                repaint();
+                            }
+                        }, 200);
+                    }
+                    repaint();
+                }
                 esconderatack();
-                verificarvida();
-                repaint();
             }
         });
 
@@ -413,29 +468,6 @@ class Tela extends JPanel {
         add(espercial);
 
     }
-
-    // Método para simular um ataque do aliado, reduzindo a vida do inimigo e a energia do aliado
-    /*private void realizarAtaque(int dano) {
-        if (turnoDoAliado) {
-            vidaInimigo -= dano;
-            if (vidaInimigo < 0) vidaInimigo = 0;
-            energiaAliado -= 10;
-            if (energiaAliado < 0) energiaAliado = 0;
-            turnoDoAliado = false; // Alterna o turno para o inimigo
-            atualizarBotoes();
-            repaint();
-            // Inicia o ataque do inimigo após um pequeno atraso para simular o turno
-            Timer timer = new Timer(1000, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    atacarAliado(15);
-                }
-            });
-            timer.setRepeats(false);
-            timer.start();
-        }
-    }*/
-
 
     private int x = 20;
     private int y = 0;
@@ -536,9 +568,8 @@ class Tela extends JPanel {
 
         g.setColor(Color.gray);
         g.fillRect(0,425,800,20);
-        g.setColor(Color.ORANGE);
+        g.setColor(Color.black);
         g.fillOval(600, 300, 50, 50); // Mini personagem 1
-        g.setColor(Color.GREEN);
     }
 }
 
