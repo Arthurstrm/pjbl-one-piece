@@ -274,9 +274,9 @@ class Tela extends JPanel {
     private JButton ataques;
     private JButton espercial;
     private JButton haki;
-    private pirata barbarnegra = new pirata("barba negra",1,10,600,200,10,5,"humano");
-    private  Luffy luffy =  new Luffy("luffy",1,0,400,200,7,4,"humano");
-    private String sla = "nao";
+    private pirata barbarnegra = new pirata("Barba Negra",1,10,600,200,10,5,"humano");
+    private  Luffy luffy =  new Luffy("Luffy",1,0,400,200,7,4,"humano");
+    private String Haki = "nao";
     private  inimigo luta = barbarnegra;
     private int verificalHaki = 0;
     private int verificarDefesa = 0;
@@ -429,11 +429,13 @@ class Tela extends JPanel {
                                 }
                             }, 200);
                         } else{
+                            x= 20;
                         }
                         esconderatack();
                         verificarvida();
                     }
                 }
+                x=20;
             }
         });
 
@@ -478,8 +480,23 @@ class Tela extends JPanel {
                 if (luffy.vida >1){
                     if (verificalHaki == 0 && verificarDefesa == 0) {
                         luffy.haki();
-                        sla = "sim";
+                        Haki = "sim";
                         repaint();
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (luta.vida >= 1) {
+                                    luta.atacar(luffy);
+                                    verificarvida();
+                                    repaint();
+                                }
+                                luffy.stamina += 20;
+                                luta.stamina += 20;
+                                verificarenergia();
+                                verificarvida();
+                                repaint();
+                            }
+                        }, 200);
                     } else {
                         System.out.println("o haki já esta ativado");
                     }
@@ -534,8 +551,6 @@ class Tela extends JPanel {
     }
 
     private int x = 20;
-    private int y = 0;
-    int j = 0;
     protected void animacaogatiling(){
         animecaopistol();
         repaint();
@@ -606,7 +621,7 @@ class Tela extends JPanel {
         g.fillRect(50,400,20,30);
         g.fillRect(80,400,20,30);
         g.fillRect(60,325,30,50);
-        if (sla == "sim") {
+        if (Haki == "sim") {
             g.setColor(Color.black);}  // Quando a vida do Luffy estiver baixa, será vermelha}
         g.fillRect(30,350,20,30);
         g.fillRect(100,360,x,20);
@@ -671,29 +686,6 @@ class Tela extends JPanel {
     }
 }
 
-class Teste{
-    public Teste(String teste) {
-    }
-
-    public static void lertxt(String filePath){
-        String linha;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))){
-            while ((linha = br.readLine()) != null){
-                String[] dados = linha.split(" - ");
-                String nome = dados[0];
-                int idade = Integer.parseInt(dados[1]);
-                String poder = dados[2];
-
-                System.out.println("nome " + nome + "Idade" + idade + " poder" + poder);
-            }
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        lertxt(filePath);
-
-    }
-}
 
 public class onepiece {
     public onepiece(String teste) {
@@ -728,7 +720,6 @@ public class onepiece {
 
         Tela tela = new Tela("RPG one piece");
         /*
-        // ainda tem que pensar como fazer o sistema de ganhar stamina
         Zoro zoro = new Zoro("Zoro",1,0,100,100,10,50,"humano");
         Luffy luffy = new Luffy("luffy",1,0,100,100,10,1,"humano");
         pirata barbanegra = new pirata("negra barba",1,10,100,100,10,1,"humano");
