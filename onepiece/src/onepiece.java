@@ -278,6 +278,8 @@ class Tela extends JPanel {
     private  Luffy luffy =  new Luffy("luffy",1,0,400,200,7,4,"humano");
     private String sla = "nao";
     private  inimigo luta = barbarnegra;
+    private int verificalHaki = 0;
+    private int verificarDefesa = 0;
 
     protected void mostraratack(){
         golpe1.setVisible(true);
@@ -305,7 +307,7 @@ class Tela extends JPanel {
             luta.vida = 0;
         }
         if (luffy.vida <= 0){
-            luta.vida = 0;
+            luffy.vida = 0;
         }
     }
 
@@ -363,27 +365,34 @@ class Tela extends JPanel {
         ataques.setFont(buttonFont);
         espercial.setFont(buttonFont);
         haki.setFont(buttonFont);
-        String ativadohaki = "nao";
+
 
         ataques.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                float danorecebido = Math.abs(luffy.causardano(30) - (luffy.causardano(30) * (luta.getDefesa() / 10)));
-                luta.vida -= danorecebido;
-                verificarvida();
-                repaint();
-                new Timer().schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (luta.vida >= 1){
-                        luta.atacar(luffy);
+                if (luffy.vida >1){
+                    if (luta.vida >= 0) {
+                        float danorecebido = Math.abs(luffy.causardano(30) - (luffy.causardano(30) * (luta.getDefesa() / 10)));
+                        luta.vida -= danorecebido;
+                        verificarvida();
                         repaint();
-                        luffy.stamina += 20;
-                        luta.stamina += 20;
-                        verificarenergia();}
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (luta.vida >= 1) {
+                                    luta.atacar(luffy);
+                                    verificarvida();
+                                    repaint();
+                                    luffy.stamina += 20;
+                                    luta.stamina += 20;
+                                    verificarenergia();
+                                }
+                            }
+                        }, 200);
+                        verificarvida();
                     }
-                }, 200);
+                }
+                verificarvida();
             }
         });
         // Listeners para botões de ataque
@@ -398,55 +407,66 @@ class Tela extends JPanel {
         golpe1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (luffy.gomo_pistol(luta) == true){
-                    animecaopistol();
-                    verificarvida();
-                    repaint();
-
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            if (luta.vida >= 1){
-                            luta.atacar(luffy);
-                            x= 20;
+                if (luffy.vida >1){
+                    if (luta.vida >= 0){
+                        if (luffy.gomo_pistol(luta) == true){
+                            animecaopistol();
+                            verificarvida();
                             repaint();
-                            luffy.stamina+= 20;
-                            luta.stamina += 20;
-                            verificarenergia();
-                            
-                            }
+
+                            new Timer().schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    if (luta.vida >= 1){
+                                    luta.atacar(luffy);
+                                    x= 20;
+                                    repaint();
+                                    luffy.stamina+= 20;
+                                    luta.stamina += 20;
+                                    verificarenergia();
+                                    verificarvida();
+                                    }
+                                }
+                            }, 200);
+                        } else{
                         }
-                    }, 200);
-                } else{
+                        esconderatack();
+                        verificarvida();
+                    }
                 }
-                esconderatack();
             }
         });
 
         golpe2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (luffy.gomoGatiling(luta) == true){
-                    animecaopistol();
-                    verificarvida();
-                    repaint();
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            if (luta.vida >= 1){
-                            luta.atacar(luffy);
-                            repaint();}
-                            luffy.stamina+= 20;
-                            luta.stamina += 20;
-                            verificarenergia();
-                            x=20;
-                            repaint();
-                        }
-                    }, 200);
-                } else {
-                    x= 20;
-                    repaint();
+                if (luffy.vida >1) {
+                    if (luffy.gomoGatiling(luta) == true) {
+                        animecaopistol();
+                        verificarvida();
+                        repaint();
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                if (luta.vida >= 1) {
+                                    luta.atacar(luffy);
+                                    verificarvida();
+                                    repaint();
+                                }
+                                luffy.stamina += 20;
+                                luta.stamina += 20;
+                                verificarenergia();
+                                verificarvida();
+                                x = 20;
+                                repaint();
+                            }
+                        }, 200);
+                    } else {
+                        x = 20;
+                        repaint();
+                    }
                 }
+                verificarvida();
                 esconderatack();
             }
         });
@@ -455,36 +475,50 @@ class Tela extends JPanel {
         haki.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                luffy.haki();
-                sla = "sim";
-                repaint();
+                if (luffy.vida >1){
+                    if (verificalHaki == 0 && verificarDefesa == 0) {
+                        luffy.haki();
+                        sla = "sim";
+                        repaint();
+                    } else {
+                        System.out.println("o haki já esta ativado");
+                    }
+                }
+                verificalHaki += 1;
+                verificarDefesa += 1;
             }
         });
 
         golpe3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (luta.vida >= 1){
-                    if (luffy.gomoRifle(luta) == true){
+                if (luffy.vida >1) {
+                    if (luta.vida >= 1) {
+                        if (luffy.gomoRifle(luta) == true) {
 
-                        verificarvida();
+                            verificarvida();
+                            repaint();
+                            new Timer().schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    if (luta.vida >= 1) {
+                                        luta.atacar(luffy);
+                                        verificarvida();
+                                        repaint();
+                                    }
+                                    luffy.stamina += 20;
+                                    luta.stamina += 20;
+                                    verificarenergia();
+                                    verificarvida();
+                                    x = 20;
+                                    repaint();
+                                }
+                            }, 200);
+                        }
                         repaint();
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                if (luta.vida >= 1){
-                                    luta.atacar(luffy);
-                                    repaint();}
-                                luffy.stamina+= 20;
-                                luta.stamina += 20;
-                                verificarenergia();
-                                x=20;
-                                repaint();
-                            }
-                        }, 200);
                     }
-                    repaint();
                 }
+                verificarvida();
                 esconderatack();
             }
         });
