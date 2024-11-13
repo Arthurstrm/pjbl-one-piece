@@ -310,6 +310,8 @@ class Tela extends JPanel {
         frame.setSize(800, 600);
         frame.add(this);
         frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
+        frame.setResizable(false);
         // Configurações dos botões de ataques
         golpe1 = new JButton("Gomo Pistol");
         golpe1.setVisible(false);
@@ -565,11 +567,34 @@ class Tela extends JPanel {
         g.fillRect(55,320,40,5);
 
 
-
         g.setColor(Color.gray);
-        g.fillRect(0,425,800,20);
+        g.fillRect(0,430,900,20);
+
+        g.setColor(Color.pink);
+        g.fillRect(600,400,20,30);
+        g.fillRect(650,400,20,30);
+        g.fillRect(650,350,20,30);
+        g.fillRect(700,360,x,20);
+        g.fillRect(620,325,30,50); // corpo
+        g.setColor(Color.orange);
+        g.fillOval(850, 308, 40, 30);
+        g.fillOval(800, 320, 50, 15);
+        g.setColor(Color.red);
+        g.fillRect(800,350,50,50);
+        g.fillRect(600,350,20,10);
+        g.fillRect(1300,350,20,10);
+        g.setColor(Color.blue);
+        g.fillRect(800,400,50,10);
+        g.fillRect(800,400,20,15);
+        g.fillRect(600,400,20,15);
+        g.setColor(Color.pink);
+        g.fillRect(600,325,30,20);
         g.setColor(Color.black);
-        g.fillOval(600, 300, 50, 50); // Mini personagem 1
+        g.fillOval(600,330,5,5);
+        g.fillOval(600,330,5,5);
+        g.setColor(Color.red);
+        g.fillRect(600,320,40,5);
+
     }
 }
 
@@ -620,7 +645,7 @@ public class onepiece {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File ("C:/Users/vinig/IdeaProjects/pjbl-one-piece1/onepiece/Teste.txt");
+        File file = new File ("C:/Users/lg680/POO/pjbl-one-piece10/onepiece/Teste.txt");
         Scanner scan = new Scanner(file);
         while(scan.hasNextLine()){
             System.out.println(scan.nextLine());
